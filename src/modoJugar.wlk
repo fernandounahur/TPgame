@@ -1,21 +1,28 @@
 import wollok.game.*
+
 import guerrero.*
-//import extras.*
-//import menu.*
+import extras.*
+
 
 object juego {
 	var property personajeActual = guerrero
 	
 	method empezar(){
 		game.addVisual(guerrero)
+	    game.addVisual(antagonista)
+	    game.addVisual(contadorX)
+	    game.addVisual(contadorXX)
+	   
 	    
-	    game.onCollideDo(guerrero,{algo=> algo.teAgarroMario()})
+	    game.onCollideDo(guerrero,{algo=> algo.teAgarroGuerrero()})
+	    game.onCollideDo(antagonista,{algo=> algo.teChocoEspada()})
 		  
 		keyboard.left().onPressDo({
 		guerrero.image("guerreraIzq.png")
 			if(personajeActual.position().x() != 0){
 				personajeActual.position(personajeActual.position().left(1))
 			}
+			guerrero.sonidoMovimiento()
 			 
 		})  	
 		keyboard.right().onPressDo({
@@ -23,102 +30,59 @@ object juego {
 			if(personajeActual.position().x() != game.width() - 1){
 				personajeActual.position(personajeActual.position().right(1))
 			}
+		guerrero.sonidoMovimiento()
 			
 		})
 		keyboard.space().onPressDo({guerrero.saltar()})
-		keyboard.a().onPressDo({guerrero.atacar()})
 		
-	    self.dragonAtaca()
-	  
-	     keyboard.enter().onPressDo({
-			game.removeTickEvent("aparece invasor")
+		keyboard.a().onPressDo({guerrero.atacar()	
 			
 		})
-//		game.addVisual(fondoGame)
-		
-//		const fondo = game.sound("ruidoDeFondo.mp3")
-
-//	 	fondo.shouldLoop(true)
-//		fondo.play()
-		
-//		if (game.hasVisual(fondoMenu)) game.removeVisual(fondoMenu)
-//		if (game.hasVisual(fondoTip)) game.removeVisual(fondoTip)
-		
-		
-	}	
+	
+	    keyboard.enter().onPressDo({	    
+	   	game.onTick(3000,"atacar a guerrero",{antagonista.atacarAGuerrero()})
+	    game.removeTickEvent("bola")
+	    
+	   	
+	   	 self.dragonAtaca()
+	        
+	     })
+	    
+	     
+	     
+        }	
 		method dragonAtaca() {
-		game.onTick(1000,"aparece invasor",{antagonista.aparecer()}) 
+		game.onTick(2000,"atacar a guerrero",{antagonista.atacarAGuerrero()}) 
 		 
-	}
+	    }
 	    method terminar(){
 			game.clear()
-			game.addVisual(guerrero)
-			game.say(guerrero,"PERDI")	
-	}
+		    game.addVisual(fondoGameOver)
+		    if(guerrero.vidas()==0)
+        		fondoGameOver.agregar()
+			if (antagonista.vidas()==0 and guerrero.vidas()>0)fondoGameOver.eliminar()
+
+				
+	    }
+        method reiniciar(){
+           keyboard.q().onPressDo({})
+       	 
+       }
+	
+}		
+	
+		
+
   		
 	
 	
-		
-//		method gameOver() {
-		
-//		if (game.hasVisual(fondoGame)) game.removeVisual(fondoGame)
-//		if (game.hasVisual(guerrero)) game.removeVisual(guerrero)
-//		if (!game.hasVisual(fondoGameOver)) game.addVisual(fondoGameOver)
-		
-	//	contadorX.reiniciarContador()
-		
-//		keyboard.r().onPressDo {if (game.hasVisual(fondoGameOver)) {
-//									game.clear()
-//								 	self.restart()}}
-//	}
-	
-//	   method winGame() {
-//		 game.clear()
-		
-//		game.addVisual(fondoWinGame1)
-		
-//		const cancionGanar = game.sound("cancionGanar.mp3") 
-//		cancionGanar.shouldLoop(true)
 
-		
- // 	   game.schedule(1500, {game.addVisual(fondoWinGame2)})
-//		game.schedule(1500, {cancionGanar.play()})
-		
-//		contadorX.reiniciarContador()
-		
-//		keyboard.r().onPressDo {if (game.hasVisual(fondoWinGame2)) {
-//									game.clear()
-//							 	self.restart()
-//								 	cancionGanar.stop()}
-//	}
-//	}
-//	  method restart() {
-		
-//	}
 
  
-}
-  
-  
-  
 
- //method cargar (){
-//		(0..19).forEach{x=>objetos.add(new Invisible(position = game.at(x,0)))}
-//		(0..19).forEach{x=>objetos.add(new Invisible(position = game.at(x,11)))}
-//		(0..19).forEach{x=>objetos.add(new Invisible(position = game.at(x,11)))}
-//		(0..19).forEach{x=>objetos.add(new Invisible(position = game.at(x,11)))}
-		
-	//	objetos.add(new Caja(position = game.at(0,9)))
-	//    objetos.add(new Caja(position = game.at(0,9)))
-	//    objetos.add(new Caja(position = game.at(0,9)))
-		
-	//	rivales.add(new Fuego(position = game.at(12,9)))
-		
-//		objetos.forEach{x => game.addVisual(x)}
-//	    rivales.forEach{x => game.addVisual(x)}
-///		game.addVisual("fueg.jpg")
-//	}
-//}
+  
+  
+  
 
 	
 
